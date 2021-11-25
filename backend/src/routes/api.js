@@ -26,7 +26,6 @@ const routes = [
 const errorSymbol = Symbol();
 
 router.post("/login", async (req, res) => {
-  console.log(req.body);
   const { username, password } = req.body;
   let payload;
   for (const { url, options } of routes) {
@@ -34,6 +33,7 @@ router.post("/login", async (req, res) => {
       .post(url, options(username, password))
       .catch(() => errorSymbol);
     if (result !== errorSymbol) {
+      console.log(payload);
       payload = result.data;
     }
   }
@@ -52,18 +52,20 @@ router.get("/Events", async (req, res) => {
 });
 
 router.get("/Mangas", async (req, res) => {
-  const { data } = await axios.get("http://192.168.137.120:8000/api/manga");
+  const { data } = await axios
+    .get("http://192.168.137.120:8000/api/manga")
+    .catch((err) => console.log(err));
   res.json(data);
 });
+
 router.post("/money", async (req, res) => {
   const { text, price } = req.body;
-  const { data } = await axios.post(
-    "http://192.168.137.189:5000/api/v1/transactions",
-    {
+  const { data } = await axios
+    .post("http://192.168.137.7:5000/api/v1/transactions", {
       text,
       amount: price,
-    }
-  );
+    })
+    .catch((err) => console.log(err));
   res.json(data);
 });
 
